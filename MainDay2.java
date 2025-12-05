@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainDay2 {
   public static void main(String[] args) {
     System.out.println("Hello, Day 2!");
@@ -15,22 +18,38 @@ public class MainDay2 {
     }
     // split the line (expect just a sinle line, actually)
     String[] ids = lines[0].split(",");
+    List<Long> invalidIds = new ArrayList<>();
+    long sum = 0;
     for (String idRange : ids) {
-        System.out.println("Working on this id:" + idRange);
+        //System.out.println("Working on this id:" + idRange);
         // for each idRange, extract the start and end
         String[] parts = idRange.split("-");
-        int start = Integer.parseInt(parts[0]);
-        int end = Integer.parseInt(parts[1]);
-        System.out.println("Start: " + start + ", End: " + end);
-        // // process all the numbers in the range
-        // for (int i = start; i <= end; i++) {
-        //     System.out.println("Number: " + i);}
-        processRange(start, end);
+        //int start = Integer.parseInt(parts[0]);
+        long start = Long.parseLong(parts[0]);
+        long end = Long.parseLong(parts[1]);
+        processRange(start, end, invalidIds);
+    }
+    System.out.println("Invalid IDs so far: " + invalidIds);
+    // sum the invalid IDs
+    for (long invalidId : invalidIds) {
+        sum += invalidId;
+    }
+    System.out.println("Sum of invalid IDs: " + sum);
+  }
+  public static void processRange(long start, long end, List<Long> invalidIdsList) {
+    for (long Id = start; Id <= end; Id++) {
+        // for each Id in this sequence, break it into parts using a denominator
+        String idStr = Long.toString(Id);
+        for (int groupSize = 1; groupSize <= idStr.length(); groupSize++) {
+            for (int i = 0; i <= idStr.length() - groupSize; i++) {
+                String part = idStr.substring(i, i + groupSize);
+                long partValue = Long.parseLong(part);
+                System.out.println(partValue);
+            }
+        }
     }
   }
-  public static void processRange(int start, int end) {
-    for (int i = start; i <= end; i++) {
-        System.out.println("Number: " + i);
-    }
+  public static int countDigits(long number) {
+    return String.valueOf(number).length();
   }
 }
