@@ -22,3 +22,5 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+input-day2.txt:sec.endpointdlp
+input-day2.txt:Zone.Identifier
