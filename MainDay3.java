@@ -1,8 +1,10 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainDay3 {
   
-  public record DataResult(String line, int big) {}
-  
+  public record ResultFromPass(String line, int big, int idx) {}
+
   public static void main(String[] args) {
     System.out.println("Hello, Day 3!");
     // read input-day2.txt file using the FileReaderUtil class
@@ -14,38 +16,53 @@ public class MainDay3 {
         System.out.println("Error: " + e.getMessage());
     }
     // read each character, one at a time in the line array and find the 2 highest numbers
+    List<Integer> jolts = new ArrayList<>();
     for (String line: lines) {
-      //System.out.println("Here is a line from the file" + line);
-      //System.out.println("Current biggest is: " + biggest);
-      DataResult resultFirstPass = findBiggest(line);
+      ResultFromPass resultFirstPass = findBiggest(line);
       String newLine = resultFirstPass.line();
       int firstBiggest = resultFirstPass.big();
-      DataResult resultSecondPass = findBiggest(newLine);
-      int secondBiggest = resultSecondPass.big;
-      System.out.println("Found the 2 biggest numbers in first line: " + firstBiggest + " " + secondBiggest);
-      }  
+      int firstIdx = resultFirstPass.idx();
+      ResultFromPass resultSecondPass = findBiggest(newLine);
+      int secondBiggest = resultSecondPass.big();
+      int secondIdx = resultSecondPass.idx();
+      if (firstIdx > secondIdx) {
+        // add the second found
+        jolts.add(secondBiggest);
+        jolts.add(firstBiggest);
+      } else {
+        // add the first found
+        jolts.add(firstBiggest);
+        jolts.add(secondBiggest);
+      }
+    }
+    for (Integer res : jolts) {
+      System.out.println("Found ints: " + res + ".");
+    }
   }
 
-  public static DataResult findBiggest(String line) {
-    int biggest = 0;
+  public static ResultFromPass findBiggest(String line) {
     String newLine = new String();
+    int biggest = 0;
+    int index = 0;
     // check the first character
     for (int idxchar = 0; idxchar < line.length(); idxchar++) {
       int candidate = Character.getNumericValue(line.charAt(idxchar)); 
       if ( candidate > biggest) {
         // update the biggest
         biggest = candidate;
-        // remove this char from the line for a second pass
-        newLine = removeChar(line, idxchar);
+        // // remove this char from the line for a second pass
+        // newLine = removeFront(line, idxchar);
+        // take note of the index 
+        index = idxchar;
       }
+    newLine = line.substring(index+1);
     }
-    return new DataResult(newLine, biggest);
+    return new ResultFromPass(newLine, biggest, index);
   }
-  public static String removeChar(String line, int idx) {
+  public static String removeFront(String line, int index) {
     // accept a string, create a copy but leave out the idx specified
-    StringBuilder tempStr = new StringBuilder(line);
-    tempStr.deleteCharAt(idx);
-    String newLine = tempStr.toString();
-    return newLine;
+    //StringBuilder tempStr = new StringBuilder(line);
+    String newline = line.substring(index + 1);
+    return newline;
   }
 }
